@@ -25,13 +25,23 @@
       {% if settings.owner_meta %}
         <meta name="google-site-verification" content="{{ settings.owner_meta }}"/>
       {% endif %}
+<!--
       {% if settings.gaid %}<script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', '{{ settings.gaid }}']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();</script>{% endif %}
+-->
       {% for script in settings.extra_scripts %}
         <script type="text/javascript" src="{{ script|escape }}"></script>
       {% endfor %}
       {% if settings.extra_init_script %}
         <script type="text/javascript">{{ settings.extra_init_script }}</script>
       {% endif %}
+      <script type="text/javascript" src="/gae-wiki-static/jquery-1.9.1.js"></script>
+      <script type="text/javascript" src="/gae-wiki-static/jquery-ui.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="/gae-wiki-static/jquery-ui.css" />
+      <script>
+      $(document).ready(function() {
+        $( "topictree" ).accordion({ header: "> p", heightStyle: "content", active: false, collapsible: true });
+      });
+      </script>
     </head>
     <body>
     	{% block header %}
