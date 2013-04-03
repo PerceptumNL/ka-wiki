@@ -22,8 +22,8 @@ test: test-syntax
 test-syntax:
 	pep8 -r --ignore E501 gaewiki/*.py
 
-upload: .hg/gaepass
-	cat .hg/gaepass | appcfg.py -e "$(MAIL)" --passin update .
+upload: .git/gaepass
+	cat .git/gaepass | appcfg.py -e "$(MAIL)" --passin update .
 
 serve: .tmp/blobstore
 	dev_appserver.py --require_indexes --enable_sendmail --use_sqlite --blobstore_path=.tmp/blobstore --datastore_path=.tmp/datastore --skip_sdk_update_check -d -a 127.0.0.1 .
@@ -35,5 +35,5 @@ release:
 .tmp/blobstore:
 	mkdir -p .tmp/blobstore
 
-.hg/gaepass:
-	$(EDITOR) .hg/gaepass
+.git/gaepass:
+	$(EDITOR) .git/gaepass
