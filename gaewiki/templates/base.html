@@ -85,6 +85,8 @@
         <p id="pm">This {% if revision %}revision was added{% else %}page was last edited{% endif %} {% if page.author.get_nickname %}by <a href="/user%3A{{ page.author.get_nickname|uurlencode }}">{{ page.author.get_nickname|escape }}</a>{% else %}anonymously{% endif %} on {{ page.updated|timezone|date:"Y/m/d H:i:s" }}.</p>
         {% endif %}
         {% if footer %}{{ footer|wikify|safe }}{% endif %}
+        {% block disqus %}
+        {% endblock %}
       </div>
 		{% endblock %}
     </body>
