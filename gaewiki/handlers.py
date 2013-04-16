@@ -12,6 +12,8 @@ from google.appengine.api import users
 from google.appengine.ext import blobstore
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import blobstore_handlers
+
+import webapp2
 from google.appengine.runtime.apiproxy_errors import OverQuotaError
 
 import access
@@ -21,6 +23,16 @@ import settings
 import util
 import view
 
+import os
+_path = os.path.dirname(os.path.abspath(__file__))
+logging.info(_path)
+
+import sys
+sys.path.append(_path + '/khanlms')
+sys.path.append(_path + '/khanlms/third_party')
+logging.info(sys.path)
+
+from khanlms.main import UpdateExercises
 
 class NotFound(Exception):
     pass
@@ -34,7 +46,7 @@ class BadRequest(Exception):
     pass
 
 
-class RequestHandler(webapp.RequestHandler):
+class RequestHandler(webapp2.RequestHandler):
     def reply(self, content, content_type='text/plain', status=200, save_as=None):
         self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
         if save_as:
@@ -75,7 +87,7 @@ class RequestHandler(webapp.RequestHandler):
         elif type(e) == NotFound:
             self.show_error_page(404)
         elif debug_mode:
-            return webapp.RequestHandler.handle_exception(self, e, debug_mode)
+            return webapp2.RequestHandler.handle_exception(self, e, debug_mode)
         else:
             self.show_error_page(500)
 
@@ -188,7 +200,7 @@ class EditHandler(RequestHandler):
         taskqueue.add(url="/w/cache/purge", params={})
 
 
-class CachePurgeHandler(webapp.RequestHandler):
+class CachePurgeHandler(webapp2.RequestHandler):
     def get(self):
         if users.is_current_user_admin():
             taskqueue.add(url="/w/cache/purge", params={})
@@ -529,7 +541,6 @@ class DiffHandler(RequestHandler):
         html = view.view_diff(rev1, rev2, users.get_current_user(), users.is_current_user_admin())
         self.reply(html, 'text/html')
 
-
 handlers = [
     ('/', StartPageHandler),
     ('/robots\.txt$', RobotsHandler),
@@ -558,4 +569,19 @@ handlers = [
     ('/w/cache/purge$', CachePurgeHandler),
     ('/w/diff/$', DiffHandler),
     ('/(.+)$', PageHandler),
+    #Khan-LMS
+#    ('/k/exercise_test/(.*)/(.*)', TestExercise),
+#    ('/k/activity', ViewActivity),
+#    ('/k/exercises', ListExercises),
+#    ('/k/exercises/(.*)', ViewExercise),
+#    ('/k/set_status', SetStatus),
+#    ('/k/update_commits', UpdateCommits),
+#    #for subscriber
+#    ('/k/updates/(.*)', Updates),
+    #for clicks 
+    ('/k/update/exercises', UpdateExercises),
+#    ('/k/send_message', SendMessage),
+#    ('/k/oauth_callback', SendMessage),
+#    ('/k/oauth_subscriber', ViewOAuthSubscriber),
+#    ('/k/(.*)', MainPage),
 ]

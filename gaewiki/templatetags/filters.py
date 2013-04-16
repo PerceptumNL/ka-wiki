@@ -1,16 +1,13 @@
-# encoding=utf-8
-
-from google.appengine.dist import use_library
-use_library('django', '1.2')
+# encoding=utf-8 from google.appengine.dist import use_library
+#use_library('django', '1.2')
 from google.appengine.ext.webapp import template
 
 from pytz.gae import pytz
 
-import settings
-import util
-
-
+import gaewiki.settings
+import logging
 register = template.create_template_register()
+import util2 as util
 
 
 @register.filter

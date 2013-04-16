@@ -10,6 +10,7 @@ import markdown
 import model
 import settings
 import images
+import view
 
 
 cleanup_re_1 = re.compile('<h\d>.*', re.MULTILINE | re.DOTALL)
@@ -85,6 +86,8 @@ def wikify_one(pat, real_page_title):
                 return list_pages_by_label('gaewiki:parent:' + (parts[1] or real_page_title))
             elif parts[0] == 'Image':
                 return render_image(parts[1].split(";"), page_title)
+            elif parts[0] == 'KA':
+                return render_exercise(parts[1])
             iwlink = settings.get(u'interwiki-' + parts[0])
             if iwlink:
                 return '<a class="iw iw-%s" href="%s" target="_blank">%s</a>' % (parts[0], iwlink.replace('%s', urllib.quote(parts[1].encode('utf-8'))), page_title)
@@ -108,6 +111,9 @@ def wikify_one(pat, real_page_title):
         "text": cgi.escape(page_text),
     }
 
+def render_exercise(name):
+    data = { "name": name }
+    return view.render('exercise_description.html', data)
 
 def render_image(args, title):
     key = args[0]

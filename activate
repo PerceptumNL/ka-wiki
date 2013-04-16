@@ -1,0 +1,11 @@
+KHANLMS_PATH=$PWD/gaewiki/khanlms
+GAE_PATH=$PWD/tools/google_appengine
+export SERVER_SOFTWARE="Develop"
+
+alias dev_appserver.py='dev_appserver.py --allow_skipped_files --use_sqlite --high_replication --enable_console'
+export PATH=$GAE_PATH:$PATH:$GAE_PATH
+#export PYTHONPATH=$GAE_PATH:$GAE_PATH/google/appengine/dist27/:$PWD/third_party:$GAE_PATH/lib/webapp2-2.5.1/:$PYTHONPATH:$GAE_PATH/lib/simplejson/:$GAE_PATH/lib/fancy_urllib/
+export PYTHONPATH=$KHANLMS_PATH:$KHANLMS_PATH/third_party:$GAE_PATH/lib/webapp2-2.5.1/:$PYTHONPATH:$GAE_PATH/lib/simplejson/:$GAE_PATH/lib/fancy_urllib/:$GAE_PATH/lib/:$GAE_PATH/lib/jinja2-2.6/:$GAE_PATH/lib/django-1.4/:$GAE_PATH/lib/django-1.4/:$GAE_PATH/lib/markupsafe-0.15/:$PWD/gaewiki:$PWD
+chmod +x $GAE_PATH/dev_appserver.py
+chmod +x $GAE_PATH/appcfg.py
+source env/bin/activate

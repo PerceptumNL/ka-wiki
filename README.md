@@ -1,7 +1,25 @@
+How to run local
+================
+
+Download the Google App Engine
+
+  python tools/appengine_download.py
+
+
+Create a virtual python environment.
+
+  virtualenv env
+
+
+Activate the development environment.
+
+  source activate
+
 GAE Wiki
 ========
 
 This is a simple wiki engine for Google App Engine.
+
 
 
 Contributors

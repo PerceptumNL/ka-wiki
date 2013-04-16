@@ -15,6 +15,9 @@ import model
 import settings
 import util
 
+#webapp.template.register_template_library('templatetags')
+webapp.template.register_template_library('gaewiki.templatetags.filters')
+
 
 DEFAULT_LABEL_BODY = u"""name: %(title)s
 ---
