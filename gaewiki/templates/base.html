@@ -2,6 +2,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<style type="text/css">
+#button-back {
+    align: middle;
+    padding: 10px 15px;
+    background: #4479BA;
+    color: #FFF;
+}
+
+}
+a {text-decoration: none}
+table, td, th
+{
+border:1px solid black;
+}
+th
+{
+background-color:grey;
+color:white;
+}
+table  {
+width:100%;
+}
+td {
+text-align: center;
+padding:10px;
+}
+th {
+height:50px;
+}
+</style>
+
       {% if settings.extra_styles %}
         {% for style in settings.extra_styles %}
           <link rel="stylesheet" type="text/css" href="{{ style|escape }}"/>
