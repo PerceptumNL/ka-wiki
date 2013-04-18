@@ -1,4 +1,17 @@
 {% extends "base.html" %}
+{% macro ex_details(ex) -%}
+<h1>
+<span>{{ ex.topic }}</span>
+-
+<span>{{ ex.pretty_display_name }}</span>
+</h1>
+
+{% if ex.live %}
+<a href="http://khanacademie.nl{{ ex.relative_url }}" target="_blank">Practice!</a>
+{% else %}
+<span>Exercise is not live!<span>
+{% endif %}
+{%- endmacro %}
 {% block heads %}{% if can_edit %}
   <link rel="alternate" type="application/x-wiki" href="/w/edit?page={{ page.title|uurlencode }}"/>
 {% endif %}{% endblock %}
@@ -17,6 +30,10 @@
   {% endif %}
 </ul>
 <div class="wtabs extl" id="pb">
+
+  {% if page.is_exercise() %}
+    {{ ex_details(ex=page.get_exercise()) }}
+  {% endif %}
   {% if page.body %}
     {% if "/" in page.title %}{{ page.title|breadcrumbs|safe }}{% endif %}
     {% if is_plain %}
@@ -24,7 +41,7 @@
     {% else %}
       {{ page|wikify_page|safe }}
       {% if page_labels %}
-        <p class="categories">{% if settings.labels_text %}{{ settings.labels_text }}{% else %}Labels{% endif %}: {% for label in page_labels %}{% if forloop.first %}{% else %}, {% endif %}<a class="int" href="{{ label|labelurl }}">{{ label|escape }}</a>{% endfor %}.</p>
+        <p class="categories">{% if settings.labels_text %}{{ settings.labels_text }}{% else %}Labels{% endif %}: {% for label in page_labels %}{% if loop.first %}{% else %}, {% endif %}<a class="int" href="{{ label|labelurl }}">{{ label|escape }}</a>{% endfor %}.</p>
       {% endif %}
       {% if page.comments_enabled %}
         {{ settings.comments_code|safe }}
@@ -48,7 +65,7 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'khanacademie-wiki'; // required: replace example with your forum shortname
+        var disqus_shortname = 'khan-academie'; // required: replace example with your forum shortname
         var disqus_identifier = '{{ page.get_display_title|escape }}';
 
         /* * * DON'T EDIT BELOW THIS LINE * * */

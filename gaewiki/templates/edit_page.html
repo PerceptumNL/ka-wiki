@@ -7,10 +7,71 @@
 <script type="text/javascript" src="/gae-wiki-static/scripts/markitup/sets/markdown/set.js"></script>
 -->
 <script type="text/javascript" src="/gae-wiki-static/editor.js"></script>
-<!--
-<link rel="stylesheet" type="text/css" href="/gae-wiki-static/scripts/markitup/skins/markitup/style.css" />
-<link rel="stylesheet" type="text/css" href="/gae-wiki-static/scripts/markitup/sets/markdown/style.css" />
--->
+<script type="text/javascript" src="/gae-wiki-static/tinymce/js/tinymce/tinymce.min.js"></script>
+
+<script type="text/javascript">
+(function() {
+	tinymce.create('tinymce.plugins.EditSettingsPlugin', {
+		init : function(ed, url) {
+
+			// Register commands
+			ed.addCommand('mceEdSet', function() {
+				ed.windowManager.open({
+                    title: "Edit page settings",
+                    body: {
+                       type:"textbox",               
+                       name:"editsettings",
+                       multiline:!0,
+                       minWidth:600,
+                       minHeight:300,
+                       value:$("#editor2").val(),
+                       spellcheck:!1
+                    }, 
+                    onSubmit: function(t) { 
+                       $("#editor2").val(t.data.editsettings);
+                    }
+              })
+			});
+
+			// Register buttons
+			ed.addButton('editsettings', {
+				title : 'advlink.link_descaaa',
+                image: '/gae-wiki-static/settings.png',
+				cmd : 'mceEdSet'
+			});
+		},
+
+		getInfo : function() {
+			return {
+				longname : 'Edit settings',
+				author : 'Perceptum',
+				authorurl : 'http://perceptum.nl',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
+		}
+	});
+
+	// Register plugin
+	tinymce.PluginManager.add('editsettings', tinymce.plugins.EditSettingsPlugin);
+})();
+
+tinyMCE.init({
+
+        plugins : [
+          "editsettings advlist autolink lists link image charmap print preview anchor",
+          "searchreplace visualblocks code fullscreen",
+          "insertdatetime media table contextmenu paste"
+        ],
+        mode : "specific_textareas",
+        editor_selector : "mceEditor",
+        theme_advanced_buttons3_add : "tablecontrols",
+        theme_advanced_buttons1: "editsettings",
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code editsettings"
+
+});
+
+</script>
+
 {% endblock %}
 {% block content %}
   <ul id="tabs">
@@ -22,7 +83,9 @@
     <h1>Page Edit: {% if page.title %}{{ page.title|escape }}{% else %}New page{% endif %}</h1>
     <form action="/w/edit" method="POST" class="markdown editor">
         <input type="hidden" name="name" value="{{ page.title|uurlencode }}"/>
-        <textarea rows="20" cols="80" name="body" id="editor">{% if page.body %}{{ page.get_actual_body }}{% endif %}</textarea>
+        {#<div>{{ page.parsed_body.text }}</div>#}
+        <textarea rows="20" cols="80" name="page_settings" id="editor2" style="display:none">{{ page.format_header() }}</textarea>
+        <textarea rows="20" cols="80" class="mceEditor" name="body" id="editor">{% if page.body %}{{ page|wikify_page|safe }}{% endif %}</textarea>
 		<p>Revision comment: <input type="text" name="comment" value="{% if comment %}{{ comment }}{% endif %}" style="width:30em;"/></p>
         {% if page.is_saved %}
         <p><label><input type="checkbox" value="1" name="delete"/>Delete this page</label></p>
@@ -36,7 +99,7 @@
       <div id="preview">
       {{ page|wikify_page|safe }}
       {% if page_labels %}
-        <p class="categories">{% if settings.labels_text %}{{ settings.labels_text }}{% else %}Labels{% endif %}: {% for label in page_labels %}{% if forloop.first %}{% else %}, {% endif %}<a class="int" href="{{ label|labelurl }}">{{ label|escape }}</a>{% endfor %}.</p>
+        <p class="categories">{% if settings.labels_text %}{{ settings.labels_text }}{% else %}Labels{% endif %}: {% for label in page_labels %}{% if loop.first %}{% else %}, {% endif %}<a class="int" href="{{ label|labelurl }}">{{ label|escape }}</a>{% endfor %}.</p>
       {% endif %}
       {% if page.comments_enabled %}
         {{ settings.comments_code|safe }}

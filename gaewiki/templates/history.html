@@ -25,8 +25,8 @@
   </tr>
 {% for revision in revisions %}
   <tr>
-	<td><input {% if forloop.first %}checked="checked" {% endif %}id="r1-{{ revision.key }}" name="r1" type="radio" value="{{ revision.key }}"></td>
-	<td>{% if not forloop.last %}<input id="r2-{{ revision.key }}" name="r2" type="radio" value="{{ revision.key }}">{% endif %}</td>
+	<td><input {% if loop.first %}checked="checked" {% endif %}id="r1-{{ revision.key }}" name="r1" type="radio" value="{{ revision.key }}"></td>
+	<td>{% if not loop.last %}<input id="r2-{{ revision.key }}" name="r2" type="radio" value="{{ revision.key }}">{% endif %}</td>
     <td><a class="int" href="{{ page_title|pageurl }}?r={{ revision.key }}">{{ revision.created|timezone|date:"Y/m/d H:i:s"}}</a></td>
     <td><a class="int" href="{{ page_title|pageurl }}?r={{ revision.key }}">{% if revision.comment %}{{ revision.comment }}{% else %}(none){% endif %}</a></td>
   </tr>

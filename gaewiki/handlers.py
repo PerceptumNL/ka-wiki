@@ -14,6 +14,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import blobstore_handlers
 
 import webapp2
+import jinja2
 from google.appengine.runtime.apiproxy_errors import OverQuotaError
 
 import access
@@ -30,9 +31,10 @@ logging.info(_path)
 import sys
 sys.path.append(_path + '/khanlms')
 sys.path.append(_path + '/khanlms/third_party')
-logging.info(sys.path)
 
 from khanlms.main import UpdateExercises
+from khanlms.exercise_models import Exercise
+
 
 class NotFound(Exception):
     pass
@@ -127,7 +129,8 @@ class PageHandler(RequestHandler):
             raise Exception('No such page.')
         if not access.can_read_page(title, users.get_current_user(), users.is_current_user_admin()):
             raise Forbidden
-        self.title = title.replace('_', ' ')
+        #self.title = title.replace('_', ' ')
+        self.title = title
         self.raw = self.request.get("format") == "raw"
         self.revision = self.request.get("r")
 
@@ -195,7 +198,7 @@ class EditHandler(RequestHandler):
         if not access.can_edit_page(title, user, users.is_current_user_admin()):
             raise Forbidden
         page = model.WikiContent.get_by_title(title)
-        page.update(body=self.request.get('body'), author=user, comment=self.request.get('comment'), delete=self.request.get('delete'))
+        page.update(body=self.request.get('body'), author=user, comment=self.request.get('comment'), delete=self.request.get('delete'), page_settings=self.request.get('page_settings'))
         self.redirect('/' + urllib.quote(page.title.encode('utf-8').replace(' ', '_')))
         taskqueue.add(url="/w/cache/purge", params={})
 
@@ -541,6 +544,18 @@ class DiffHandler(RequestHandler):
         html = view.view_diff(rev1, rev2, users.get_current_user(), users.is_current_user_admin())
         self.reply(html, 'text/html')
 
+class UpdateExercisesWiki(RequestHandler):
+    def get(self, name=None):
+        exs = Exercise.all().fetch(99999)
+        self.response.write("<pre>")
+        for ex in exs:
+            page = model.WikiContent.get_by_title(ex.name)
+            page.set_property("viewtype", "exercise")
+            self.response.write(ex.name + '\n')
+            page.put()
+        self.response.write("ok")
+        self.response.write("</pre>")
+
 handlers = [
     ('/', StartPageHandler),
     ('/robots\.txt$', RobotsHandler),
@@ -568,6 +583,9 @@ handlers = [
     ('/w/login', LoginHandler),
     ('/w/cache/purge$', CachePurgeHandler),
     ('/w/diff/$', DiffHandler),
+
+    ('/e/update', UpdateExercises),
+    ('/e/updatewiki', UpdateExercisesWiki),
     ('/(.+)$', PageHandler),
     #Khan-LMS
 #    ('/k/exercise_test/(.*)/(.*)', TestExercise),
@@ -579,7 +597,6 @@ handlers = [
 #    #for subscriber
 #    ('/k/updates/(.*)', Updates),
     #for clicks 
-    ('/k/update/exercises', UpdateExercises),
 #    ('/k/send_message', SendMessage),
 #    ('/k/oauth_callback', SendMessage),
 #    ('/k/oauth_subscriber', ViewOAuthSubscriber),

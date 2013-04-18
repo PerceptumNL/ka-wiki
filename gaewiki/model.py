@@ -110,6 +110,17 @@ class WikiContent(db.Model):
             self._parsed_page = self.parse_body(self.body or '')
         return self._parsed_page.get(key, default)
 
+    def get_exercise(self):
+        from khanlms.exercise_models import Exercise
+        logging.info(self.title)
+        ex = Exercise.get_by_name(self.title)
+        logging.info(ex)
+        if ex: return ex
+        else: return None
+
+    def is_exercise(self):
+        return self.get_property("viewtype") == "exercise"
+
     def set_property(self, key, value):
         """Changes the value of a property."""
         if self._parsed_page is None:
@@ -165,6 +176,16 @@ class WikiContent(db.Model):
     def get_file_length(self):
         return self.get_property('file_length')
 
+    def format_header(self):
+        """Returns the text representation of a parsed body dictionary."""
+        parsed = WikiContent.parse_body(self.body)
+        def format_property(value):
+            if type(value) == list:
+                value = u', '.join(sorted(value))
+            return value
+        head = u'\n'.join(sorted([u'%s: %s' % (k, format_property(v)) for k, v in parsed.items() if k != 'text']))
+        return head 
+
     def put(self):
         """Adds the gaewiki:parent: labels transparently."""
         if self.body is not None:
@@ -218,7 +239,11 @@ class WikiContent(db.Model):
         archive = WikiRevision(title=self.title, revision_body=self.body, author=self.author, created=self.updated, uuid=self.uuid, comment=self.comment)
         archive.put()
 
-    def update(self, body, author, comment, delete):
+    def update(self, body, author, comment, delete, page_settings=None):
+
+        if page_settings:
+            body = page_settings + "\n---\n" + body
+
         if self.is_saved():
             self.backup()
             if delete:
@@ -283,7 +308,7 @@ class WikiContent(db.Model):
     def get_by_title(cls, title, default_body=None, create_if_none=True):
         """Finds and loads the page by its title, creates a new one if nothing
         could be found."""
-        title = title.replace('_', ' ')
+        #title = title.replace('_', ' ')
         page = cls.gql('WHERE title = :1', title).get()
         if page is None and create_if_none:
             page = cls(title=title)

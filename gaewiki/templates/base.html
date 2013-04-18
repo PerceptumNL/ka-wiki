@@ -78,7 +78,7 @@ height:50px;
         <div class="top">
           <div class="login">
             {% if user %}
-              <strong><a href="/w/profile">{{ user.get_nickname|escape }}</a></strong>
+              <strong><a href="/w/profile">{{ user.get_nickname()|escape }}</a></strong>
               <a href="/w/index">Index</a>
               <a href="/w/changes">Changes</a>
               {% if is_admin %}
@@ -111,7 +111,7 @@ height:50px;
 		{% block footer %}
       <div id="footer">
         {% if page.is_saved %}
-        <p id="pm">This {% if revision %}revision was added{% else %}page was last edited{% endif %} {% if page.author.get_nickname %}by <a href="/user%3A{{ page.author.get_nickname|uurlencode }}">{{ page.author.get_nickname|escape }}</a>{% else %}anonymously{% endif %} on {{ page.updated|timezone|date:"Y/m/d H:i:s" }}.</p>
+        <p id="pm">This {% if revision %}revision was added{% else %}page was last edited{% endif %} {% if page.author %}by <a href="/user%3A{{ page.author.get_nickname|uurlencode }}">{{ page.author.get_nickname()|escape }}</a>{% else %}anonymously{% endif %} on {{ page.updated|datetime }}.</p>
         {% endif %}
         {% if footer %}{{ footer|wikify|safe }}{% endif %}
         {% block disqus %}

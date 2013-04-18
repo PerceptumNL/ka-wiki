@@ -8,15 +8,39 @@ from urllib import quote
 from django.utils import simplejson
 from google.appengine.api import users
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
+#from google.appengine.ext.webapp import template
+from inspect import getmembers, isfunction
+
 
 import access
 import model
 import settings
-import util
+import util2 as util
+import jinja2
+import templatetags.filters as filters
 
-#webapp.template.register_template_library('templatetags')
-webapp.template.register_template_library('gaewiki.templatetags.filters')
+jinja_environment = jinja2.Environment(autoescape=True,
+    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')))
+
+def format_datetime(value, format='medium'):
+    return value.strftime('%Y-%m-%d') 
+
+def get_filters():
+    return {
+        "parse_page": util.parse_page,
+        "pageurl": util.pageurl,
+        "pageurl_rel": util.pageurl_rel,
+        "uurlencode": util.uurlencode,
+        "wikify": util.wikify,
+        "breadcrumbs": filters.breadcrumbs,
+        "wikify_page": filters.wikify_page,
+        "labelurl": filters.labelurl,
+        'datetime': format_datetime
+    }
+
+
+for k,v in get_filters().items():
+    jinja_environment.filters[k] = v
 
 
 DEFAULT_LABEL_BODY = u"""name: %(title)s
@@ -33,6 +57,7 @@ _This is an automatically generated page._
 
 def render(template_name, data):
     filename = os.path.join(os.path.dirname(__file__), 'templates', template_name)
+
     if not os.path.exists(filename):
         raise Exception('Template %s not found.' % template_name)
     if 'user' not in data:
@@ -51,7 +76,8 @@ def render(template_name, data):
         data['settings'] = settings.get_all()
     if 'base' not in data:
         data['base'] = util.get_base_url()
-    return template.render(filename, data)
+    template = jinja_environment.get_template(template_name)
+    return template.render(data)
 
 
 def get_sidebar():

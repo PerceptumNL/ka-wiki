@@ -4,10 +4,10 @@ from google.appengine.ext.webapp import template
 
 from pytz.gae import pytz
 
-import gaewiki.settings
+#import gaewiki.settings as settings
 import logging
 register = template.create_template_register()
-import util2 as util
+import gaewiki.util2 as util
 
 
 @register.filter
@@ -63,7 +63,8 @@ def cleanup_summary(text):
 @register.filter
 def timezone(date, tz=None):
     if not tz:
-        tz = settings.get("timezone", "UTC")
+        #tz = settings.get("timezone", "UTC")
+        tz = "UTC"
     if tz:
         return date.replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(tz))
     return date

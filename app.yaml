@@ -1,11 +1,28 @@
 application: khan-wiki-nl
-version: 1
+version: 5
 runtime: python27
 api_version: 1
 threadsafe: true
 
 builtins:
 - remote_api: on
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?.*\.bak$
+- ^env
+- ^tools
+- ^gaewiki/khanlms/env
+- ^gaewiki/khanlms/tools
+
 
 handlers:
 - url: /gae-wiki-static/
