@@ -9,6 +9,7 @@
 <script type="text/javascript" src="/gae-wiki-static/editor.js"></script>
 <script type="text/javascript" src="/gae-wiki-static/tinymce/js/tinymce/tinymce.min.js"></script>
 
+{% if page.title != "macros" %}
 <script type="text/javascript">
 (function() {
 	tinymce.create('tinymce.plugins.EditSettingsPlugin', {
@@ -69,8 +70,21 @@ tinyMCE.init({
         toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code editsettings"
 
 });
-
 </script>
+
+{% else %}
+
+<script src="/gae-wiki-static/codemirror/codemirror.js"></script>
+<link rel="stylesheet" href="/gae-wiki-static/codemirror/codemirror.css">
+<script src="/gae-wiki-static/codemirror/mode/jinja2/jinja2.js"></script>
+<script>
+$(document).ready(function() {
+  var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("editor"), {
+    mode:  "jinja2"
+  });
+});
+</script>
+{% endif %}
 
 {% endblock %}
 {% block content %}
