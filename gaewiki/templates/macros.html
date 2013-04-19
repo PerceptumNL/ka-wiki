@@ -1,0 +1,20 @@
+{% macro KAexercise(ex) -%}
+<h1>
+<span>{{ ex.topic }}</span>
+-
+<span>{{ ex.pretty_display_name }}</span>
+</h1>
+{% if ex.live %}
+<a href="http://khanacademie.nl{{ ex.relative_url }}" target="_blank">Practice!</a>
+{% else %}
+<span>Exercise is not live!<span>
+{% endif %}
+{%- endmacro %}
+
+{% macro KAlink(ex) -%}
+    <span>{{ ex.pretty_display_name }}</span><span><a href="http://www.khanacademie.nl/{{ ex.relative_url }}">►</a></span>
+{%- endmacro %}
+
+{% macro not_exists() -%}
+    Exercise doesn't exists
+{%- endmacro %}
