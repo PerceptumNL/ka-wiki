@@ -17,30 +17,7 @@ import model
 import settings
 import util2 as util
 import jinja2
-import templatetags.filters as filters
-
-jinja_environment = jinja2.Environment(autoescape=True,
-    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')))
-
-def format_datetime(value, format='medium'):
-    return value.strftime('%Y-%m-%d') 
-
-def get_filters():
-    return {
-        "parse_page": util.parse_page,
-        "pageurl": util.pageurl,
-        "pageurl_rel": util.pageurl_rel,
-        "uurlencode": util.uurlencode,
-        "wikify": util.wikify,
-        "breadcrumbs": filters.breadcrumbs,
-        "wikify_page": filters.wikify_page,
-        "labelurl": filters.labelurl,
-        'datetime': format_datetime
-    }
-
-
-for k,v in get_filters().items():
-    jinja_environment.filters[k] = v
+from gaewiki import jinja_environment
 
 
 DEFAULT_LABEL_BODY = u"""name: %(title)s
@@ -76,7 +53,11 @@ def render(template_name, data):
         data['settings'] = settings.get_all()
     if 'base' not in data:
         data['base'] = util.get_base_url()
-    template = jinja_environment.get_template(template_name)
+
+    path = os.path.join(os.path.dirname(__file__), 'templates/%s' % template_name)
+    template_fdata = file(path, 'r').read().decode('utf-8')
+    macro_fdata = model.WikiContent.get_by_title("macros").body.decode('utf-8')
+    template = jinja_environment.from_string(macro_fdata + template_fdata)
     return template.render(data)
 
 

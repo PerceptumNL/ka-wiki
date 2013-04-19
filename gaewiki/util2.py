@@ -10,7 +10,8 @@ import markdown
 import model
 import settings
 import images
-import view
+import jinja2
+from khanlms.exercise_models import Exercise
 
 
 cleanup_re_1 = re.compile('<h\d>.*', re.MULTILINE | re.DOTALL)
@@ -86,8 +87,26 @@ def wikify_one(pat, real_page_title):
                 return list_pages_by_label('gaewiki:parent:' + (parts[1] or real_page_title))
             elif parts[0] == 'Image':
                 return render_image(parts[1].split(";"), page_title)
-            elif parts[0] == 'KA':
-                return render_exercise(parts[1])
+            elif parts[0][:2] == 'KA':
+                from gaewiki import jinja_environment
+                #macro_name = parts[0][2:]
+                try:
+                    macro_name = parts[0]
+                    page = model.WikiContent.get_by_title("macros")
+                    if page == None:
+                        path = os.path.join(os.path.dirname(__file__), 'templates/macros.html')
+                        page = file(path, 'r').read()
+                    exercise = Exercise.get_by_name(parts[1])
+                    if exercise:
+                        call_macro = "{{ %s(%s) }}" % (macro_name, "exercise")
+                    else:
+                        call_macro = "{{ %s() }}" % "not_exists"
+            
+                    template = jinja2.Template(page.body + call_macro)
+                    return template.render({"exercise": exercise})
+                except:
+                    return "(%s) missing" % parts[0]
+                #return render_exercise(parts[1])
             iwlink = settings.get(u'interwiki-' + parts[0])
             if iwlink:
                 return '<a class="iw iw-%s" href="%s" target="_blank">%s</a>' % (parts[0], iwlink.replace('%s', urllib.quote(parts[1].encode('utf-8'))), page_title)
@@ -110,10 +129,6 @@ def wikify_one(pat, real_page_title):
         "hint": cgi.escape(page_hint),
         "text": cgi.escape(page_text),
     }
-
-def render_exercise(name):
-    data = { "name": name }
-    return view.render('exercise_description.html', data)
 
 def render_image(args, title):
     key = args[0]

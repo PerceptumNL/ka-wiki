@@ -1,21 +1,9 @@
 {% extends "base.html" %}
-{% macro ex_details(ex) -%}
-<h1>
-<span>{{ ex.topic }}</span>
--
-<span>{{ ex.pretty_display_name }}</span>
-</h1>
 
-{% if ex.live %}
-<a href="http://khanacademie.nl{{ ex.relative_url }}" target="_blank">Practice!</a>
-{% else %}
-<span>Exercise is not live!<span>
-{% endif %}
-{%- endmacro %}
 {% block heads %}{% if can_edit %}
   <link rel="alternate" type="application/x-wiki" href="/w/edit?page={{ page.title|uurlencode }}"/>
 {% endif %}{% endblock %}
-{% block title %}{{ page.get_display_title|escape }}{% if settings.wiki_title %} — {{ settings.wiki_title|escape }}{% endif %}{% endblock %}
+{% block title %}{{ page.get_display_title()|escape }}{% if settings.wiki_title %} — {{ settings.wiki_title|escape }}{% endif %}{% endblock %}
 {% block content %}
 <ul id="tabs"{% if page.is_locked %} class="locked"{% else %}{% endif %}>
   <li class="active"><a class="view" href="{{ page.title|pageurl }}">View</a></li>
@@ -32,7 +20,7 @@
 <div class="wtabs extl" id="pb">
 
   {% if page.is_exercise() %}
-    {{ ex_details(ex=page.get_exercise()) }}
+    {{ KAexercise(page.get_exercise()) }}
   {% endif %}
   {% if page.body %}
     {% if "/" in page.title %}{{ page.title|breadcrumbs|safe }}{% endif %}
@@ -66,7 +54,7 @@
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
         var disqus_shortname = 'khan-academie'; // required: replace example with your forum shortname
-        var disqus_identifier = '{{ page.get_display_title|escape }}';
+        var disqus_identifier = '{{ page.get_display_title()|escape }}';
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {
