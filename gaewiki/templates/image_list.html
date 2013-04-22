@@ -22,21 +22,21 @@
         {% for image in images %}
           <tr>
             <td>
-              <img alt="thumbnail" src="{{ image.get_url }}=s25-c" width="25" height="25"/>
+              <img alt="thumbnail" src="{{ image.get_url() }}=s25-c" width="25" height="25"/>
             </td>
             <td>
-              <a href="/w/image/view?key={{ image.get_key }}">
-                {{ image.get_filename|escape }}
+              <a href="/w/image/view?key={{ image.get_key() }}">
+                {{ image.get_filename()|escape }}
               </a>
             </td>
             <td>
-              {{ image.get_uploaded_on|date:"Y/m/d, H:i" }}
+              {{ image.get_uploaded_on()|datetime }}
             </td>
             <td>
-              {{ image.get_size }}
+              {{ image.get_size() }}
             </td>
             <td>
-              <code>[[Image:{{ image.get_key }}]]</code>
+              <code>[[Image:{{ image.get_key() }}]]</code>
             </td>
           </tr>
         {% endfor %}

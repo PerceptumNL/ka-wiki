@@ -11,7 +11,7 @@ jinja_environment = jinja2.Environment(autoescape=True, loader=jinja2.FileSystem
 jinja_environment.shared=True
 
 def format_datetime(value, format='medium'):
-    return value.strftime('%Y-%m-%d') 
+    return value.strftime('%Y-%m-%d %H:%M') 
 
 def get_filters():
     return {

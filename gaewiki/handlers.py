@@ -491,6 +491,7 @@ class ImageUploadHandler(RequestHandler, blobstore_handlers.BlobstoreUploadHandl
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
         blob_info = upload_files[0]
 
+
         image_page_url = "/w/image/view?key=" + str(blob_info.key())
         return self.redirect(image_page_url)
 
@@ -498,6 +499,8 @@ class ImageUploadHandler(RequestHandler, blobstore_handlers.BlobstoreUploadHandl
 class ImageServeHandler(RequestHandler):
     def get(self):
         img = images.Image.get_by_key(self.request.get("key"))
+        user = users.get_current_user()
+        wiki_user = model.WikiUser.get_or_create(user)
 
         data = {
             "meta": img.get_info(),
@@ -511,7 +514,7 @@ class ImageServeHandler(RequestHandler):
         page_title = "Image:" + img.get_key()
         data["pages"] = model.WikiContent.find_backlinks_for(page_title)
 
-        html = view.view_image(data, user=users.get_current_user(),
+        html = view.view_image(data, user=wiki_user,
             is_admin=users.is_current_user_admin())
         self.reply(html, 'text/html')
 
@@ -519,7 +522,7 @@ class ImageServeHandler(RequestHandler):
 class ImageListHandler(RequestHandler):
     def get(self):
         lst = images.Image.find_all()
-        html = view.view_image_list(lst, users.get_current_user(),
+        html = view.view_image_list(lst, model.WikiUser.get_current(),
             users.is_current_user_admin())
         self.reply(html, "text/html")
 

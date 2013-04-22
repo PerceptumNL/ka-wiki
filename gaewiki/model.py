@@ -21,6 +21,12 @@ class WikiUser(db.Model):
     nickname = db.StringProperty()
     public_email = db.StringProperty()
 
+    @classmethod
+    def get_current(cls):
+        user = users.get_current_user()
+        wiki_user = cls.get_or_create(user)
+        return wiki_user
+
     def get_nickname(self):
         if self.nickname:
             return self.nickname
