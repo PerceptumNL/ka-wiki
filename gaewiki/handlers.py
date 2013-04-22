@@ -479,8 +479,9 @@ class ImageUploadHandler(RequestHandler, blobstore_handlers.BlobstoreUploadHandl
             raise Forbidden
 
         submit_url = blobstore.create_upload_url(self.request.path)
+        wiki_user = model.WikiUser.get_or_create(user)
 
-        html = view.view_image_upload_page(user, is_admin, submit_url)
+        html = view.view_image_upload_page(wiki_user, is_admin, submit_url)
         self.reply(html, "text/html")
 
     def post(self):
