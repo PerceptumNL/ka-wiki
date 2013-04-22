@@ -76,13 +76,13 @@ tinyMCE.init({
 {% block content %}
   <ul id="tabs">
     <li><a href="{{ page.title|pageurl }}">View</a></li>
-    <li class="active"><a href="/w/edit?page={{ page.title|urlencode }}">Edit</a></li>
-    <li><a href="/w/history?page={{ page.title|urlencode }}">History</a></li>
+    <li class="active"><a href="/w/edit?page={{ page.title|uurlencode }}">Edit</a></li>
+    <li><a href="/w/history?page={{ page.title|uurlencode }}">History</a></li>
   </ul>
   <div class="wtabs" id="pb">
     <h1>Page Edit: {% if page.title %}{{ page.title|escape }}{% else %}New page{% endif %}</h1>
     <form action="/w/edit" method="POST" class="markdown editor">
-        <input type="hidden" name="name" value="{{ page.title|urlencode }}"/>
+        <input type="hidden" name="name" value="{{ page.title|uurlencode }}"/>
         {#<div>{{ page.parsed_body.text }}</div>#}
         <textarea rows="20" cols="80" name="page_settings" id="editor2" style="display:none">{{ page.format_header() }}</textarea>
         <textarea rows="20" cols="80" class="mceEditor" name="body" id="editor">{% if page.body %}{{ page.body|safe }}{% endif %}</textarea>
