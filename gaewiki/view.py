@@ -54,10 +54,14 @@ def render(template_name, data):
     if 'base' not in data:
         data['base'] = util.get_base_url()
 
-    path = os.path.join(os.path.dirname(__file__), 'templates/%s' % template_name)
-    template_fdata = file(path, 'r').read().decode('utf-8')
-    macro_fdata = model.WikiContent.get_by_title("macros").body.decode('utf-8')
-    template = jinja_environment.from_string(macro_fdata + template_fdata)
+    try:
+        path = os.path.join(os.path.dirname(__file__), 'templates/%s' % template_name)
+        template_fdata = file(path, 'r').read().decode('utf-8')
+        macro_fdata = model.WikiContent.get_by_title("macros").body
+        template = jinja_environment.from_string(macro_fdata + template_fdata)
+    except:
+        logging.error("Template macros is failing")
+        template = jinja_environment.get_template(template_name)
     return template.render(data)
 
 
