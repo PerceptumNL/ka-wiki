@@ -14,8 +14,8 @@
       <tbody>
       {% for user in users %}
         <tr>
-          <td><a href="/user%3A{{ user.get_nickname|uurlencode }}">{{ user.get_nickname|escape }}</a></td>
-          <td>{{ user.joined|timezone|date:"Y/m/d" }}</td>
+          <td><a href="/user%3A{{ user.get_nickname()|uurlencode }}">{{ user.get_nickname()|escape }}</a></td>
+          <td>{{ user.joined|datetime }}</td>
         </tr>
       {% endfor %}
       </tbody>
