@@ -63,6 +63,8 @@ tinyMCE.init({
           "searchreplace visualblocks code fullscreen",
           "insertdatetime media table contextmenu paste"
         ],
+        relative_urls: false,
+        convert_urls: false,
         mode : "specific_textareas",
         editor_selector : "mceEditor",
         theme_advanced_buttons3_add : "tablecontrols",
@@ -99,7 +101,7 @@ $(document).ready(function() {
         <input type="hidden" name="name" value="{{ page.title|uurlencode }}"/>
         {#<div>{{ page.parsed_body.text }}</div>#}
         <textarea rows="20" cols="80" name="page_settings" id="editor2" style="display:none">{{ page.format_header() }}</textarea>
-        <textarea rows="20" cols="80" class="mceEditor" name="body" id="editor">{% if page.body %}{{ page|wikify_page|safe }}{% endif %}</textarea>
+        <textarea rows="20" cols="80" class="mceEditor" name="body" id="editor">{% if page.body %}{{ page.body|safe }}{% endif %}</textarea>
 		<p>Revision comment: <input type="text" name="comment" value="{% if comment %}{{ comment }}{% endif %}" style="width:30em;"/></p>
         {% if page.is_saved %}
         <p><label><input type="checkbox" value="1" name="delete"/>Delete this page</label></p>

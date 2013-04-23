@@ -111,7 +111,7 @@ def wikify_one(pat, real_page_title):
             if iwlink:
                 return '<a class="iw iw-%s" href="%s" target="_blank">%s</a>' % (parts[0], iwlink.replace('%s', urllib.quote(parts[1].encode('utf-8'))), page_title)
 
-    page = model.WikiContent.get_by_title(page_name)
+    page = model.WikiContent.get_by_title(pageurl_rel(page_name))
 
     page_class = "int"
     page_link = pageurl(page_name)
