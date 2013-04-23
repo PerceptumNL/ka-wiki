@@ -111,7 +111,7 @@ height:50px;
 		{% block footer %}
       <div id="footer">
         {% if page and page.is_saved %}
-        <p id="pm">This {% if revision %}revision was added{% else %}page was last edited{% endif %} {% if page.author %}by <a href="/user%3A{{ page.author.get_nickname|uurlencode }}">{{ page.author.get_nickname()|escape }}</a>{% else %}anonymously{% endif %} on {{ page.updated|datetime }}.</p>
+        <p id="pm">This {% if revision %}revision was added{% else %}page was last edited{% endif %} {% if page.author %}by <a href="/user%3A{{ page.author.get_nickname()|uurlencode }}">{{ page.author.get_nickname()|escape }}</a>{% else %}anonymously{% endif %} on {{ page.updated|datetime }}.</p>
         {% endif %}
         {% if footer %}{{ footer|wikify|safe }}{% endif %}
         {% block disqus %}

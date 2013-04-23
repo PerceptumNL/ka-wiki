@@ -12,19 +12,19 @@
         </tr>
         <tr>
           <th>Public page:</th>
-          <td><a href="/user%3A{{ user.get_nickname|uurlencode }}">user:{{ user.get_nickname|escape }}</a></td>
+          <td><a href="/user%3A{{ user.get_nickname()|uurlencode }}">user:{{ user.get_nickname()|escape }}</a></td>
         </tr>
         <tr>
           <th>Nickname:</th>
           <td>
-            <input type="text" class="text" name="nickname" value="{{ user.get_nickname|escape }}"/>
+            <input type="text" class="text" name="nickname" value="{{ user.get_nickname()|escape }}"/>
             <p class="hint">Used in <a href="/w/changes">the list of changes</a> etc.</p>
           </td>
         </tr>
         <tr>
           <th>Public email:</th>
           <td>
-            <input type="text" class="text" name="email" value="{{ user.get_public_email|escape }}"/>
+            <input type="text" class="text" name="email" value="{{ user.get_public_email()|escape }}"/>
             <p class="hint">Used in RSS.</p>
           </td>
         </tr>
