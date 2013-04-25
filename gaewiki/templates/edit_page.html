@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/gae-wiki-static/editor.js"></script>
 <script type="text/javascript" src="/gae-wiki-static/tinymce/js/tinymce/tinymce.min.js"></script>
 
-{% if page.title != "macros" %}
+{% if page.title != "macros" and page.title != "stylecss" %}
 <script type="text/javascript">
 (function() {
 	tinymce.create('tinymce.plugins.EditSettingsPlugin', {
@@ -82,7 +82,7 @@ tinyMCE.init({
 <script>
 $(document).ready(function() {
   var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("editor"), {
-    mode:  "jinja2"
+    mode:  {% if page.title == "macros" %}"jinja2"{% elif page.title == "stylecss"  %}"css"{% endif %}
   });
 });
 </script>

@@ -31,13 +31,18 @@ height:50px;
 }
 </style>
 
-      {% if settings.extra_styles %}
-        {% for style in settings.extra_styles %}
-          <link rel="stylesheet" type="text/css" href="{{ style|escape }}"/>
-        {% endfor %}
-      {% else %}
-        <link rel="stylesheet" type="text/css" href="/gae-wiki-static/style.css"/>
-      {% endif %}
+{% if stylecss %}
+<style>{{ stylecss }}</style>
+{% else %}
+  {% if settings.extra_styles %}
+    {% for style in settings.extra_styles %}
+      <link rel="stylesheet" type="text/css" href="{{ style|escape }}"/>
+    {% endfor %}
+  {% else %}
+    <link rel="stylesheet" type="text/css" href="/gae-wiki-static/style.css"/>
+  {% endif %}
+{% endif %}
+
         <!--[if gte IE 6]>
       {% if settings.extra_ie_styles %}
         {% for style in settings.extra_ie_styles %}

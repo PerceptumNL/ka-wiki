@@ -57,11 +57,21 @@ def render(template_name, data):
     try:
         path = os.path.join(os.path.dirname(__file__), 'templates/%s' % template_name)
         template_fdata = file(path, 'r').read().decode('utf-8')
-        macro_fdata = model.WikiContent.get_by_title("macros").body
+        if "rss" in template_name:
+            macro_fdata = ""
+        else:
+            macro_fdata = model.WikiContent.get_by_title("macros").body
         template = jinja_environment.from_string(macro_fdata + template_fdata)
     except:
         logging.error("Template macros is failing")
         template = jinja_environment.get_template(template_name)
+
+    try:
+        stylecss = model.WikiContent.get_by_title("stylecss").body
+        data['stylecss'] = stylecss
+    except:
+        logging.error("Template stylecss is failing")
+
     return template.render(data)
 
 
