@@ -25,9 +25,9 @@
   </tr>
 {% for revision in revisions %}
   <tr>
-	<td><input {% if loop.first %}checked="checked" {% endif %}id="r1-{{ revision.key }}" name="r1" type="radio" value="{{ revision.key }}"></td>
-	<td>{% if not loop.last %}<input id="r2-{{ revision.key }}" name="r2" type="radio" value="{{ revision.key }}">{% endif %}</td>
-    <td><a class="int" href="{{ page_title|pageurl }}?r={{ revision.key }}">{{ revision.created|datetime }}</a></td>
+	<td><input {% if loop.first %}checked="checked" {% endif %}id="r1-{{ revision.key() }}" name="r1" type="radio" value="{{ revision.key() }}"></td>
+	<td>{% if not loop.last %}<input id="r2-{{ revision.key() }}" name="r2" type="radio" value="{{ revision.key() }}">{% endif %}</td>
+    <td><a class="int" href="{{ page_title|pageurl }}?r={{ revision.key() }}">{{ revision.created|datetime }}</a></td>
     <td><a class="int" href="{{ page_title|pageurl }}?r={{ revision.key }}">{% if revision.comment %}{{ revision.comment }}{% else %}(none){% endif %}</a></td>
   </tr>
 {% endfor %}</tbody></table><input type="submit" value="diff" /></form>
