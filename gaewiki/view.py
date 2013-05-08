@@ -53,6 +53,24 @@ def render(template_name, data):
         data['settings'] = settings.get_all()
     if 'base' not in data:
         data['base'] = util.get_base_url()
+    if 'code_editor' not in data:
+        data['code_editor'] = False
+        data['code_lang'] = ''
+
+    if 'page' in data:
+        title = data['page'].title
+    else:
+        title = None
+      
+    if title == "stylecss":
+        data['code_editor'] = True
+        data['code_lang'] = 'css'
+    elif title == "js":
+        data['code_editor'] = True
+        data['code_lang'] = 'javascript'
+    elif title == "macros":
+        data['code_editor'] = True
+        data['code_lang'] = 'jinja2'
 
     try:
         path = os.path.join(os.path.dirname(__file__), 'templates/%s' % template_name)
@@ -63,14 +81,20 @@ def render(template_name, data):
             macro_fdata = model.WikiContent.get_by_title("macros").body
         template = jinja_environment.from_string(macro_fdata + template_fdata)
     except:
-        logging.error("Template macros is failing")
+        logging.warning("Page 'macros' doesn't exists")
         template = jinja_environment.get_template(template_name)
 
     try:
         stylecss = model.WikiContent.get_by_title("stylecss").body
         data['stylecss'] = stylecss
     except:
-        logging.error("Template stylecss is failing")
+        logging.warning("Page 'stylecss' doesn't exists")
+
+    try:
+        js = model.WikiContent.get_by_title("js").body
+        data['js'] = js
+    except:
+        logging.warning("Page 'js' doesn't exists")
 
     return template.render(data)
 

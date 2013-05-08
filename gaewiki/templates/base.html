@@ -9,27 +9,42 @@
     background: #4479BA;
     color: #FFF;
 }
-a {text-decoration: none}
+a {
+  text-decoration: none
+}
 table, td, th
 {
-border:1px solid black;
+  border:1px solid black;
 }
 th
 {
-background-color:grey;
-color:white;
+  background-color:grey;
+  color:white;
 }
 table  {
-width:100%;
+  width:100%;
 }
 td {
-text-align: center;
-padding:10px;
+  text-align: center;
+  padding:10px;
 }
 th {
-height:50px;
+  height:50px;
 }
 </style>
+<script type="text/javascript" src="/gae-wiki-static/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/gae-wiki-static/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/gae-wiki-static/jquery-ui.css" />
+<script type="text/javascript" src="/gae-wiki-static/fancybox/jquery.fancybox.js"></script>
+<link rel="stylesheet" href="/gae-wiki-static/fancybox/jquery.fancybox.css" type="text/css" media="screen">
+<!--
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+-->
+<script type="text/javascript" src="/gae-wiki-static/editor.js"></script>
+
+{% if js %}
+<style>{{ js }}</style>
+{% endif %}
 
 {% if stylecss %}
 <style>{{ stylecss }}</style>
@@ -68,9 +83,6 @@ height:50px;
       {% if settings.extra_init_script %}
         <script type="text/javascript">{{ settings.extra_init_script }}</script>
       {% endif %}
-      <script type="text/javascript" src="/gae-wiki-static/jquery-1.9.1.js"></script>
-      <script type="text/javascript" src="/gae-wiki-static/jquery-ui.min.js"></script>
-      <link rel="stylesheet" type="text/css" href="/gae-wiki-static/jquery-ui.css" />
       <script>
       $(document).ready(function() {
         $( "topictree" ).accordion({ header: "> p", heightStyle: "content", active: false, collapsible: true });
