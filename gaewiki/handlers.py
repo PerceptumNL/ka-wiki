@@ -29,12 +29,7 @@ _path = os.path.dirname(os.path.abspath(__file__))
 logging.info(_path)
 
 import sys
-sys.path.append(_path + '/khanlms')
-sys.path.append(_path + '/khanlms/third_party')
-
-from khanlms.main import UpdateExercises
-from khanlms.exercise_models import Exercise
-
+from khansync import ExercisesSync
 
 class NotFound(Exception):
     pass
@@ -548,8 +543,13 @@ class DiffHandler(RequestHandler):
         html = view.view_diff(rev1, rev2, users.get_current_user(), users.is_current_user_admin())
         self.reply(html, 'text/html')
 
-class UpdateExercisesWiki(RequestHandler):
-    def get(self, name=None):
+class SyncExercises(RequestHandler):
+    def get(self):
+        ExercisesSync().sync()
+        self.reply("OK", 'text/html')
+
+class SyncKhanExercises(RequestHandler):
+    def get(self):
         exs = Exercise.all().fetch(99999)
         self.response.write("<pre>")
         for ex in exs:
@@ -559,6 +559,18 @@ class UpdateExercisesWiki(RequestHandler):
             page.put()
         self.response.write("ok")
         self.response.write("</pre>")
+
+#class UpdateExercisesWiki(RequestHandler):
+#    def get(self, name=None):
+#        exs = Exercise.all().fetch(99999)
+#        self.response.write("<pre>")
+#        for ex in exs:
+#            page = model.WikiContent.get_by_title(ex.name)
+#            page.set_property("viewtype", "exercise")
+#            self.response.write(ex.name + '\n')
+#            page.put()
+#        self.response.write("ok")
+#        self.response.write("</pre>")
 
 handlers = [
     ('/', StartPageHandler),
@@ -588,8 +600,8 @@ handlers = [
     ('/w/cache/purge$', CachePurgeHandler),
     ('/w/diff/$', DiffHandler),
 
-    ('/e/update', UpdateExercises),
-    ('/e/updatewiki', UpdateExercisesWiki),
+    #('/e/updatewiki', UpdateExercisesWiki),
+    ('/sync-exercises', SyncExercises),
     ('/(.+)$', PageHandler),
     #Khan-LMS
 #    ('/k/exercise_test/(.*)/(.*)', TestExercise),

@@ -10,7 +10,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 import settings
-import util2 as util
+import util 
 
 
 class WikiUser(db.Model):

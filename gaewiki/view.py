@@ -15,7 +15,7 @@ from inspect import getmembers, isfunction
 import access
 import model
 import settings
-import util2 as util
+import util
 import jinja2
 from gaewiki import jinja_environment
 

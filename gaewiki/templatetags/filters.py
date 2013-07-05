@@ -7,7 +7,7 @@ from pytz.gae import pytz
 #import gaewiki.settings as settings
 import logging
 register = template.create_template_register()
-import gaewiki.util2 as util
+import gaewiki.util as util
 
 
 @register.filter
